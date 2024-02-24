@@ -66,7 +66,7 @@ io.on("connection", (socket) => {
             senderId, receiverId,
         });
     });
-
+ 
 
     socket.on("sendNotification", ({ senderId, receiverId }) => {
         const user = getUser(receiverId);
