@@ -30,7 +30,7 @@ io.on("connection", (socket) => {
     });
 
     //send and get message
-    socket.on("sendMessage", ({ senderId, receiverId, message, fileSent, conversationId }) => {
+    socket.on("sendMessage", ({ senderId, receiverId, message, fileSent, conversationId, file }) => {
         const user = getUser(receiverId);
         console.log(senderId);
         console.log(user);
@@ -42,7 +42,7 @@ io.on("connection", (socket) => {
                 senderId,
                 message,
                 fileSent,
-                conversationId
+                conversationId, file
             });
         }
         
