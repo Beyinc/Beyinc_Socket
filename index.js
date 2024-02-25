@@ -49,6 +49,15 @@ io.on("connection", (socket) => {
     });
 
 
+    socket.on("logoutAll", ({ userId }) => {
+        const user = getUser(userId);
+        for (let i = 0; i < user.length; i++) {
+            io.to(user[i]?.socketId).emit("allDeviceLogout", "logout");
+        }
+
+    });
+
+
     socket.on("seenMessage", ({ senderId, receiverId, conversationId }) => {
         const user = getUser(receiverId);
         console.log(senderId);
