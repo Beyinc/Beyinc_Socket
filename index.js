@@ -30,7 +30,7 @@ io.on("connection", (socket) => {
     });
 
     //send and get message
-    socket.on("sendMessage", ({ senderId, receiverId, message, fileSent, conversationId }) => {
+    socket.on("sendMessage", ({ senderId, receiverId, message, fileSent, conversationId, file }) => {
         const user = getUser(receiverId);
         console.log(senderId);
         console.log(user);
@@ -42,10 +42,19 @@ io.on("connection", (socket) => {
                 senderId,
                 message,
                 fileSent,
-                conversationId
+                conversationId, file
             });
         }
         
+    });
+
+
+    socket.on("logoutAll", ({ userId }) => {
+        const user = getUser(userId);
+        for (let i = 0; i < user.length; i++) {
+            io.to(user[i]?.socketId).emit("allDeviceLogout", "logout");
+        }
+
     });
 
 
