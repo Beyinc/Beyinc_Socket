@@ -7,7 +7,7 @@ const io = require("socket.io")(8900, {
 let users = [];
 
 const addUser = (userId, socketId) => {
-    !users.some((user) => user.userId === userId) &&
+    // !users.some((user) => user.userId === userId) &&
         users.push({ userId, socketId });
 };
 
@@ -16,7 +16,7 @@ const removeUser = (socketId) => {
 };
 
 const getUser = (userId) => {
-    return users.find((user) => user.userId === userId);
+    return users.filter((user) => user.userId === userId);
 };
 
 io.on("connection", (socket) => {
@@ -37,12 +37,15 @@ io.on("connection", (socket) => {
         console.log(receiverId);
         console.log(fileSent);
         console.log(conversationId);
-        io.to(user?.socketId).emit("getMessage", {
-            senderId,
-            message,
-            fileSent,
-            conversationId
-        });
+        for (let i = 0; i < user.length; i++){
+            io.to(user[i]?.socketId).emit("getMessage", {
+                senderId,
+                message,
+                fileSent,
+                conversationId
+            });
+        }
+        
     });
 
 
@@ -52,19 +55,23 @@ io.on("connection", (socket) => {
         console.log(receiverId);
         console.log({ message: 'seen just now' });
         console.log(user?.socketId);
-        io.to(user?.socketId).emit("sendseenMessage", {
-            senderId, receiverId,
-            conversationId,
-            message: 'seen just now'
-        });
+        for (let i = 0; i < user.length; i++) {
+            io.to(user[i]?.socketId).emit("sendseenMessage", {
+                senderId, receiverId,
+                conversationId,
+                message: 'seen just now'
+            });
+        }
     });
 
 
     socket.on("chatBlocking", ({ senderId, receiverId }) => {
         const user = getUser(receiverId);
-        io.to(user?.socketId).emit("sendchatBlockingInfo", {
-            senderId, receiverId,
-        });
+        for (let i = 0; i < user.length; i++) {
+            io.to(user[i]?.socketId).emit("sendchatBlockingInfo", {
+                senderId, receiverId,
+            });
+        }
     });
  
 
@@ -72,9 +79,11 @@ io.on("connection", (socket) => {
         const user = getUser(receiverId);
         console.log(user);
         console.log(receiverId);
-        io.to(user?.socketId).emit("getNotification", {
-            senderId
-        });
+        for (let i = 0; i < user.length; i++) {
+            io.to(user[i]?.socketId).emit("getNotification", {
+                senderId
+            });
+        }
     });
 
     //when disconnect
