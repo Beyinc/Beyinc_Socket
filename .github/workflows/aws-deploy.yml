@@ -31,6 +31,6 @@ jobs:
             git clone https://github.com/Beyinc/Beyinc_Socket.git
             cd ./Beyinc_Socket
             npm i
-            pm2 delete beyinc-socket-api || : && pm2 start server.js --name 'beyinc-socket-api'
+            pm2 delete beyinc-socket-api || : && pm2 start index.js --name 'beyinc-socket-api'
             pm2 save
               '
