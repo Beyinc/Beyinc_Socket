@@ -95,6 +95,21 @@ io.on("connection", (socket) => {
         }
     });
 
+
+    socket.on("sendFollowerNotification", ({ senderId, receiverId, type, image, role, _id, userName }) => {
+        const user = getUser(receiverId);
+        if(type=='adding'){
+            io.to(user[0]?.socketId).emit("getFollowerNotification", {
+                image, role, _id, userName, type
+            });
+        } else {
+            io.to(user[0]?.socketId).emit("getFollowerNotification", {
+                _id, type
+            });
+        }
+        
+    });
+
     //when disconnect
     socket.on("disconnect", () => {
         console.log("a user disconnected!");
