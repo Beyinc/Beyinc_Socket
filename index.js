@@ -94,8 +94,6 @@ io.on("connection", (socket) => {
             });
         }
     });
-
-
     socket.on("sendFollowerNotification", ({ senderId, receiverId, type, image, role, _id, userName }) => {
         const user = getUser(receiverId);
         if(type=='adding'){
