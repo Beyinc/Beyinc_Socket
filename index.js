@@ -117,7 +117,7 @@ io.on("connection", (socket) => {
 
     // Handle new post chat message - just broadcast, no DB operations
     socket.on("sendPostChatMessage", (messageData) => {
-        const { postId, senderId, senderName, message, timestamp } = messageData;
+        const { postId,  message, } = messageData;
         console.log("Broadcasting message:", message);
         
         // Broadcast to all users in the post chat room
