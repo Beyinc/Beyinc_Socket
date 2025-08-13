@@ -115,7 +115,6 @@ io.on("connection", (socket) => {
         console.log(`User ${socket.id} joined post chat: ${postId}`);
     });
 
-    // Handle new post chat message - just broadcast, no DB operations
     socket.on("sendPostChatMessage", (messageData) => {
         const { postId,  message, } = messageData;
         console.log("Broadcasting message:", message);
@@ -135,7 +134,6 @@ io.on("connection", (socket) => {
         console.log(`User ${socket.id} left post chat: ${postId}`);
     });
     
-    //when disconnect
     socket.on("disconnect", () => {
         console.log("a user disconnected!");
         removeUser(socket.id);
