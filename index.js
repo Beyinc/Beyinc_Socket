@@ -1,6 +1,6 @@
 const io = require("socket.io")(8900, {
     cors: {
-        origin: ["http://localhost:3000", "https://beyinc-frontend.onrender.com", "https://www.beyinc.org", "https://beyinc-frontend.vercel.app","https://icy-rock-0858e3b1e.2.azurestaticapps.net"],
+        origin: ["http://localhost:3000", "https://beyinc-frontend.onrender.com", "https://www.beyinc.org", "https://beyinc-frontend.vercel.app","https://yellow-mushroom-0aec0e610.2.azurestaticapps.net"],
     },
 });
 
