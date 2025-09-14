@@ -1,6 +1,6 @@
 const io = require("socket.io")(8900, {
     cors: {
-        origin: ["http://localhost:3000", "https://beyinc-frontend.onrender.com", "https://www.beyinc.org", "https://beyinc-frontend.vercel.app","https://yellow-mushroom-0aec0e610.2.azurestaticapps.net"],
+        origin: ["http://localhost:3000", "https://beyinc-frontend.onrender.com", "https://www.beyinc.org", "https://beyinc-frontend.vercel.app", "https://yellow-mushroom-0aec0e610.2.azurestaticapps.net"],
     },
 });
 
@@ -8,7 +8,7 @@ let users = [];
 
 const addUser = (userId, socketId) => {
     // !users.some((user) => user.userId === userId) &&
-        users.push({ userId, socketId });
+    users.push({ userId, socketId });
 };
 
 const removeUser = (socketId) => {
@@ -37,7 +37,7 @@ io.on("connection", (socket) => {
         console.log(receiverId);
         console.log(fileSent);
         console.log(conversationId);
-        for (let i = 0; i < user.length; i++){
+        for (let i = 0; i < user.length; i++) {
             io.to(user[i]?.socketId).emit("getMessage", {
                 senderId,
                 message,
@@ -45,7 +45,7 @@ io.on("connection", (socket) => {
                 conversationId, file
             });
         }
-        
+
     });
 
 
@@ -82,7 +82,7 @@ io.on("connection", (socket) => {
             });
         }
     });
- 
+
 
     socket.on("sendNotification", ({ senderId, receiverId }) => {
         const user = getUser(receiverId);
@@ -96,7 +96,7 @@ io.on("connection", (socket) => {
     });
     socket.on("sendFollowerNotification", ({ senderId, receiverId, type, image, role, _id, userName }) => {
         const user = getUser(receiverId);
-        if(type=='adding'){
+        if (type == 'adding') {
             io.to(user[0]?.socketId).emit("getFollowerNotification", {
                 image, role, _id, userName, type
             });
@@ -105,9 +105,26 @@ io.on("connection", (socket) => {
                 _id, type
             });
         }
-        
+
     });
 
+    socket.on("joinPostChat", ({ postId }) => {
+        socket.join(`post-chat-${postId}`);
+        console.log(`User ${socket.id} joined post chat: ${postId}`);
+    });
+
+    socket.on("sendPostChatMessage", (messageData) => {
+        const { postId, message, } = messageData;
+        console.log("Broadcasting message:", message);
+
+        // Broadcast to all users in the post chat room
+        socket.to(`post-chat-${postId}`).emit("newPostChatMessage", messageData);
+
+        // Also emit back to sender for confirmation
+        socket.emit("newPostChatMessage", messageData);
+
+        console.log(`Message broadcasted in post ${postId}: ${message}`);
+    });
     //when disconnect
     socket.on("disconnect", () => {
         console.log("a user disconnected!");
@@ -115,4 +132,3 @@ io.on("connection", (socket) => {
         io.emit("getUsers", users);
     });
 });
- 
