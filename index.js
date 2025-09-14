@@ -108,24 +108,33 @@ io.on("connection", (socket) => {
 
     });
 
+
+    //LiveChat on post page
+    // Join post chat room
     socket.on("joinPostChat", ({ postId }) => {
         socket.join(`post-chat-${postId}`);
         console.log(`User ${socket.id} joined post chat: ${postId}`);
     });
 
     socket.on("sendPostChatMessage", (messageData) => {
-        const { postId, message, } = messageData;
+        const { postId,  message, } = messageData;
         console.log("Broadcasting message:", message);
-
+        
         // Broadcast to all users in the post chat room
         socket.to(`post-chat-${postId}`).emit("newPostChatMessage", messageData);
-
+        
         // Also emit back to sender for confirmation
         socket.emit("newPostChatMessage", messageData);
-
+        
         console.log(`Message broadcasted in post ${postId}: ${message}`);
     });
-    //when disconnect
+
+    // Leave post chat room
+    socket.on("leavePostChat", ({ postId }) => {
+        socket.leave(`post-chat-${postId}`);
+        console.log(`User ${socket.id} left post chat: ${postId}`);
+    });
+    
     socket.on("disconnect", () => {
         console.log("a user disconnected!");
         removeUser(socket.id);
