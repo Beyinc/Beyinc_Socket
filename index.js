@@ -1,16 +1,15 @@
-const io = new Server(server, {
-  cors: {
-    origin: [
+const io = require("socket.io")(8900, {
+    cors: {
+         origin: [
       "http://localhost:3000",
-      "https://beyinc-frontend-dg45.vercel.app",
-      "https://beyinc-frontend.vercel.app",
+      "https://beyinc-frontend.onrender.com",
       "https://www.beyinc.org",
-      "https://www.bloomr.world",
-      "https://yellow-mushroom-0aec0e610.2.azurestaticapps.net"
+      "https://beyinc-frontend.vercel.app",
+      "https://beyinc-frontend-dg45.vercel.app",
+      "https://yellow-mushroom-0aec0e610.2.azurestaticapps.net",
+      "https://www.bloomr.world"
     ],
-    methods: ["GET", "POST"],
-    credentials: true
-  }
+    },
 });
 
 
