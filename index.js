@@ -1,5 +1,6 @@
-const io = require("socket.io")(8900, {
-   origin: [
+const io = new Server(server, {
+  cors: {
+    origin: [
       "http://localhost:3000",
       "https://beyinc-frontend-dg45.vercel.app",
       "https://beyinc-frontend.vercel.app",
@@ -7,8 +8,11 @@ const io = require("socket.io")(8900, {
       "https://www.bloomr.world",
       "https://yellow-mushroom-0aec0e610.2.azurestaticapps.net"
     ],
-},
+    methods: ["GET", "POST"],
+    credentials: true
+  }
 });
+
 
 let users = [];
 
