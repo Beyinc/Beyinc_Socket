@@ -142,6 +142,47 @@ io.on("connection", (socket) => {
         socket.leave(`post-chat-${postId}`);
         console.log(`User ${socket.id} left post chat: ${postId}`);
     });
+
+
+    // ================= QUICK MATCH ROOM =================
+
+// User joins quick match room
+socket.on("joinQuickMatchRoom", ({ roomId, userId }) => {
+
+    const roomName = `quickmatch-${roomId}`;
+
+    socket.join(roomName);
+
+    console.log(`User ${userId} joined ${roomName}`);
+
+    // notify other members
+    socket.to(roomName).emit("userJoinedRoom", {
+        userId,
+        message: "A new member joined the room"
+    });
+});
+// Send message inside quickmatch room
+socket.on("sendQuickMatchMessage", (data) => {
+
+    const { roomId } = data;
+    const roomName = `quickmatch-${roomId}`;
+
+    console.log("QuickMatch Message:", data.message);
+
+    // broadcast to ALL users in room
+    io.to(roomName).emit("receiveQuickMatchMessage", data);
+});
+    
+socket.on("leaveQuickMatchRoom", ({ roomId, userId }) => {
+
+    const roomName = `quickmatch-${roomId}`;
+
+    socket.leave(roomName);
+
+    socket.to(roomName).emit("userLeftRoom", { userId });
+
+});
+
     
     socket.on("disconnect", () => {
         console.log("a user disconnected!");
